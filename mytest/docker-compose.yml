@@ -1,0 +1,31 @@
+version: "3"
+services:
+    django-test:
+        build: ./djangotest
+        container_name: django-test
+        restart: always
+        expose:
+          - "8000"
+
+    nginx-test:
+        build: ./nginxtest
+        container_name: nginx-test
+        restart: always
+        ports:
+          - "80:80"
+        depends_on:
+          - django-test
+
+    psql-test:
+        build: ./psqltest
+        container_name: psql-test
+        restart: always
+        volumes:
+          - myvolume01:/var/lib/postgresql/data
+        environment:
+          - POSTGRES_USER=postgres
+          - POSTGRES_PASSWORD=postgres
+          - POSTGRES_DB=postgres
+
+volumes:
+    myvolume01:
